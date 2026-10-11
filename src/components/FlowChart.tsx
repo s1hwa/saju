@@ -79,7 +79,7 @@ const AGE_YEAR_LABEL_STEP = 2;
 
 type Mode = 'screen' | 'export';
 
-function buildOption(
+export function buildOption(
   result: ConsultationResult,
   displayPoints: ConsultationResult['points'],
   activeFlows: readonly FlowDefinition[],
@@ -353,14 +353,14 @@ function initialRange(width: number, pointCount: number, minStart = 0): ChartRan
   return { start: minStart, end: Math.min(pointCount - 1, minStart + fitting - 1) };
 }
 
-function toOriginalRange(range: ChartRange, displayStartIndex: number): ChartRange {
+export function toOriginalRange(range: ChartRange, displayStartIndex: number): ChartRange {
   return {
     start: range.start + displayStartIndex,
     end: range.end + displayStartIndex,
   };
 }
 
-function toDisplayRange(range: ChartRange, displayStartIndex: number): ChartRange {
+export function toDisplayRange(range: ChartRange, displayStartIndex: number): ChartRange {
   return {
     start: range.start - displayStartIndex,
     end: range.end - displayStartIndex,
