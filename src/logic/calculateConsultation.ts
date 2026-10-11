@@ -7,21 +7,11 @@ function mod(value: number, divisor: number): number {
   return ((value % divisor) + divisor) % divisor;
 }
 
-function pointIndexForElapsedYears(elapsedYears: number): number {
-  const targetYears = Math.abs(elapsedYears);
-  let nearestIndex = 0;
-  YEAR_OFFSETS.forEach((offset, index) => {
-    const nearestDistance = Math.abs(YEAR_OFFSETS[nearestIndex] - targetYears);
-    const distance = Math.abs(offset - targetYears);
-    if (distance < nearestDistance || (distance === nearestDistance && offset >= targetYears)) {
-      nearestIndex = index;
-    }
-  });
-  return nearestIndex;
+function yearOffsetFor(pointIndex: number): number {
+  return Math.floor(pointIndex / 2) * 5 + mod(pointIndex, 2) * 2;
 }
 
 function graphStartAgeFor(springAge: number): number {
-  if (springAge <= 0) return 1;
   const residue = mod(springAge, 5);
   if (residue === 0 || residue === 2) return 0;
   if (residue === 4) return -1;
@@ -29,19 +19,25 @@ function graphStartAgeFor(springAge: number): number {
 }
 
 export function calculateConsultation(input: ConsultationInput): ConsultationResult {
-  const graphStartAge = graphStartAgeFor(input.springAge);
-  const springOffset = input.springAge - graphStartAge;
-  const exactSpringIndex = YEAR_OFFSETS.indexOf(springOffset as (typeof YEAR_OFFSETS)[number]);
-  const fallbackYearsFromAgeOneToSpring = input.springAge - 1;
-  const fallbackDirection = fallbackYearsFromAgeOneToSpring === 0
-    ? 0
-    : -Math.sign(fallbackYearsFromAgeOneToSpring);
-  const fallbackStartPointIndex = fallbackDirection * pointIndexForElapsedYears(fallbackYearsFromAgeOneToSpring);
-  const startTermIndex = exactSpringIndex >= 0
-    ? mod(-exactSpringIndex, SOLAR_TERMS.length)
-    : mod(fallbackStartPointIndex, SOLAR_TERMS.length);
-
-  const ages = YEAR_OFFSETS.map((offset) => graphStartAge + offset);
+  let graphStartAge: number;
+  let startTermIndex: number;
+  let ages: number[];
+  if (input.springAge <= 0) {
+    // Keep the original ipchun-anchored 2/3-year phase when hiding pre-birth points.
+    const elapsedYears = -input.springAge;
+    const cycles = Math.floor(elapsedYears / 5);
+    const remainder = mod(elapsedYears, 5);
+    const firstPointIndex = cycles * 2 + (remainder === 0 ? 0 : remainder <= 2 ? 1 : 2);
+    startTermIndex = mod(firstPointIndex, SOLAR_TERMS.length);
+    ages = YEAR_OFFSETS.map((_, index) => input.springAge + yearOffsetFor(firstPointIndex + index));
+    graphStartAge = ages[0];
+  } else {
+    graphStartAge = graphStartAgeFor(input.springAge);
+    const springOffset = input.springAge - graphStartAge;
+    const springIndex = Math.floor(springOffset / 5) * 2 + (mod(springOffset, 5) === 2 ? 1 : 0);
+    startTermIndex = mod(-springIndex, SOLAR_TERMS.length);
+    ages = YEAR_OFFSETS.map((offset) => graphStartAge + offset);
+  }
   const years = ages.map((age) => input.springYear + age - 1);
   const displayStartIndex = ages.findIndex((age) => age >= 0);
 

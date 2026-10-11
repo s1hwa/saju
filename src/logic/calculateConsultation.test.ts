@@ -4,19 +4,44 @@ import { SOLAR_TERMS } from '../constants/solarTerms';
 import { calculateConsultation } from './calculateConsultation';
 
 const EXPECTED_1975_YEARS = [
-  1975, 1977, 1980, 1982, 1985, 1987, 1990, 1992, 1995, 1997, 2000, 2002,
-  2005, 2007, 2010, 2012, 2015, 2017, 2020, 2022, 2025, 2027, 2030, 2032,
-  2035, 2037, 2040, 2042, 2045, 2047, 2050, 2052, 2055, 2057, 2060, 2062,
-  2065, 2067, 2070, 2072, 2075,
+  1975, 1978, 1980, 1983, 1985, 1988, 1990, 1993, 1995, 1998, 2000, 2003,
+  2005, 2008, 2010, 2013, 2015, 2018, 2020, 2023, 2025, 2028, 2030, 2033,
+  2035, 2038, 2040, 2043, 2045, 2048, 2050, 2053, 2055, 2058, 2060, 2063,
+  2065, 2068, 2070, 2073, 2075,
 ];
 
 const EXPECTED_AGES_FROM_ONE = [
-  1, 3, 6, 8, 11, 13, 16, 18, 21, 23, 26, 28, 31, 33, 36, 38, 41, 43,
-  46, 48, 51, 53, 56, 58, 61, 63, 66, 68, 71, 73, 76, 78, 81, 83, 86, 88,
-  91, 93, 96, 98, 101,
+  1, 4, 6, 9, 11, 14, 16, 19, 21, 24, 26, 29, 31, 34, 36, 39, 41, 44,
+  46, 49, 51, 54, 56, 59, 61, 64, 66, 69, 71, 74, 76, 79, 81, 84, 86, 89,
+  91, 94, 96, 99, 101,
 ];
 
 describe('calculateConsultation', () => {
+  it.each([
+    { springAge: -1, firstIndex: 1, visibleAges: [1, 4, 6, 9, 11] },
+    { springAge: -2, firstIndex: 1, visibleAges: [0, 3, 5, 8, 10] },
+    { springAge: -3, firstIndex: 2, visibleAges: [2, 4, 7, 9, 12] },
+    { springAge: -4, firstIndex: 2, visibleAges: [1, 3, 6, 8, 11] },
+    { springAge: -5, firstIndex: 2, visibleAges: [0, 2, 5, 7, 10] },
+    { springAge: -16, firstIndex: 7, visibleAges: [1, 4, 6, 9, 11] },
+    { springAge: -103, firstIndex: 42, visibleAges: [2, 4, 7, 9, 12] },
+    { springAge: 0, firstIndex: 0, visibleAges: [0, 2, 5, 7, 10] },
+  ])('preserves Excel timing and values for spring age $springAge', ({ springAge, firstIndex, visibleAges }) => {
+    const result = calculateConsultation({ name: 'excel-phase', springYear: 2003, springAge });
+    expect(result.points.slice(0, 5).map((point) => point.age)).toEqual(visibleAges);
+    result.points.forEach((point, index) => {
+      const originalIndex = firstIndex + index;
+      const originalOffset = Math.floor(originalIndex / 2) * 5 + (originalIndex % 2 === 1 ? 2 : 0);
+      expect(point.age).toBe(springAge + originalOffset);
+      expect(point.year).toBe(2003 + point.age - 1);
+      expect(point.solarTerm).toBe(SOLAR_TERMS[originalIndex % 24]);
+      expect(point.psychology).toBe(FLOW_CYCLE[originalIndex % 24]);
+      expect(point.means).toBe(FLOW_CYCLE[((originalIndex - 4) % 24 + 24) % 24]);
+      expect(point.wealth).toBe(FLOW_CYCLE[((originalIndex - 8) % 24 + 24) % 24]);
+      expect(point.honor).toBe(FLOW_CYCLE[((originalIndex - 12) % 24 + 24) % 24]);
+    });
+  });
+
   it('keeps the birth year as age one when spring age is before age one', () => {
     const result = calculateConsultation({
       name: 'sample',
