@@ -83,7 +83,7 @@
 
 ![상담 정보 입력 화면](docs/images/input-screen.png)
 
-### 네 흐름을 함께 표시한 결과 화면
+### 4가지 흐름을 함께 표시한 결과 화면
 
 ![심리·수단·재물·명예를 함께 표시한 결과 화면](docs/images/result-all.png)
 
