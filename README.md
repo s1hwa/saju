@@ -1,5 +1,7 @@
 # 인생 흐름 주기
 
+saju - life flow graphs
+
 기존 Excel 통합문서의 첫 번째 시트를 기준으로 만든 오프라인 Windows 상담 프로그램입니다.
 
 ## 개발 실행
