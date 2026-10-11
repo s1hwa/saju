@@ -1,4 +1,4 @@
-# 인생 흐름 주기 — Excel 기반 상담 업무의 Windows 프로그램 전환
+# 인생 흐름 주기 — Excel -> Windows 프로그램 전환
 
 사주 상담소의 기존 Excel 양식을 분석해 상담 정보 입력부터 그래프 비교, 결과지 저장·인쇄까지 연결한 Windows 기반 상담 프로그램.
 
@@ -28,6 +28,13 @@
 <br>
 
 ### 1-1. 요구사항 및 대응
+
+
+<img width="1485" height="1162" alt="image" src="https://github.com/user-attachments/assets/c8e9a5c8-1543-483d-bf6e-11b60e90ce13" />
+기존 엑셀 프로그램 사진
+
+
+
 
 
 | 주요 요구사항 | 대응 |
