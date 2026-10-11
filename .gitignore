@@ -1,0 +1,8 @@
+node_modules/
+.guide-deps/
+dist/
+dist-electron/
+release/
+delivery/
+artifacts/
+*.log
