@@ -17,9 +17,8 @@
 - 고객에게 제공할 결과의 PDF·이미지 저장 및 인쇄 요구.
 - 기존 계산 기준 유지와 합의한 개선사항 반영 요구.
 
-<!-- 이미지 추천: 음수 나이부터 시작하는 기존 Excel 그래프. 개인정보를 가린 뒤 docs/images/excel-before.png에 저장하고 아래 이미지 활성화.
-![기존 Excel에서 음수 나이부터 표시되는 그래프](docs/images/excel-before.png)
--->
+<img width="743" height="581" alt="image" src="https://github.com/user-attachments/assets/4142f474-c67f-4f8d-8cbc-8e179287bf3e" />
+
 
 ### 개발 중 발견한 문제
 
